@@ -1,0 +1,63 @@
+#This is the scipt opy.py that would be present in the attackers/victims machine
+
+import os
+import random
+import time
+
+
+
+
+for x in range(1000):
+        
+                
+        n = random.randint(1,6)
+        #print(n)
+
+        if n==0 :
+                os.system('pwd')
+                print("Printed working directory")
+                print("\n")
+                time.sleep(2)
+
+        if n==1 :
+                #os.system('cd /home ; pwd')
+                print("Changed working directory")
+                print("\n")
+                time.sleep(2)
+
+        if n==2 :
+                os.system('ls')
+                print("ls command")
+                print("\n")
+                time.sleep(2)
+
+        if n==3 :
+                os.system('cat /etc/passwd
+
+                print("read passwd file for users")
+                print("\n")
+                time.sleep(2)
+
+        if n==4 :
+                os.system('hostname')
+                print("Hostname printed")
+                print("\n")
+                time.sleep(2)
+
+        
+        if n==5 :
+                os.system('echo 1234 >> run.txt')
+                print("Wrote to file")
+                print("\n")
+                time.sleep(2)
+        if n==6 :
+               
+                os.system('cat /etc/shadow')
+                print("read shadow file for users")
+                print("\n")
+                time.sleep(2)
+ 
+
+        	        
+
+commands()
