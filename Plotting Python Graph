@@ -1,0 +1,59 @@
+
+"""
+Plotting graphs based on sequence numbers, RTT(round trip time), packet length, etc.
+The code is an example of plotting graph based on sequence number. The files are csv files that were exported from the wireshark capture.
+"""
+# importing the required module
+import pandas as pd
+import chardet
+import numpy as np
+import matplotlib.pyplot as plt
+
+
+columns=[0,1,2,3,4,5,6,7,8,9]
+array=[]
+oscar_demographics = pd.read_csv("h1.csv",encoding='ascii',usecols =columns, nrows=100)#, nrows=600
+
+x=[]
+y=[]
+for i in columns:
+
+    if i == 0:
+        x1=oscar_demographics.values.T[i].tolist()
+        #print(x)
+    if i == 5:
+        y1=oscar_demographics.values.T[i].tolist()
+        #print(y)
+
+
+plt.plot(x1, y1, label = "line 1")
+
+columns=[0,1,2,3,4,5,6,7,8,9]
+array=[]
+oscar_demographics = pd.read_csv("h2.csv",encoding='ascii',usecols =columns, nrows=100 )#, nrows=600
+
+x=[]
+y=[]
+for i in columns:
+    if i == 0:
+        x2=oscar_demographics.values.T[i].tolist()
+        #print(x)
+    if i == 5:
+        y2=oscar_demographics.values.T[i].tolist()
+        #print(y)
+  
+# plotting the line 2 points 
+plt.plot(x2, y2, label = "line 2")
+  
+# naming the x axis
+plt.xlabel('x - axis---Timestamp')
+# naming the y axis
+plt.ylabel('y - axis--- Sequence num')
+# giving a title to my graph
+plt.title('Two lines on same graph!')
+  
+# show a legend on the plot
+plt.legend()
+  
+# function to show the plot
+plt.show()
