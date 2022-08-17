@@ -1,0 +1,25 @@
+#This code is for automating the tcpdump process in all the docker interfaces and able to kill the process after collecting the traffic from all the interfaces.
+#tcpdump.py
+import os
+
+network=input('Specify the network name\n')
+os.system(f'ovs-vsctl list-ifaces {network} | tee {network}.txt ')
+
+with open(f'{network}.txt') as f:
+    content_list = [line.rstrip() for line in f]
+
+print(content_list)
+for i in content_list:
+    print(f'os.system(f"tshark -i {i}")')
+    os.system(f'gnome-terminal -- sh -c "tshark -w {i}.pcap -i {i} -f "tcp port 22" ; exec $SHELL"')  
+    #os.system(f'gnome-terminal -- sh -c "tshark -i {i} -Y "ssh" ; exec $SHELL"')
+    #os.system(f'gnome-terminal -- sh -c "tshark -i {i} ; exec $SHELL"')
+
+
+#killprocess.py
+import os
+print('Runnning this script to kill the process of tshark')
+os.system('killall tshark')
+
+print('The file name of each container is based on its interface connected to the network')
+os.system('ovs-vsctl list interface | grep "name\|external_ids"')
