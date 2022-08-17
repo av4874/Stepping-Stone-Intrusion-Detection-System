@@ -1,0 +1,56 @@
+#Adding Chaff Pertubation to the Stepping Stone Attack
+
+import os
+import time
+import asyncio
+import paramiko
+
+
+
+async def fetch(jumpbox):
+
+    t_end = time.time() + 60 * 10
+    while time.time() < t_end:
+        stdin, stdout, stderr = jumpbox.exec_command("echo 'A'")
+        for line in stdout.read().split(b'\n'):
+          print(str(line))
+          await asyncio.sleep(2)
+
+
+async def print_num(target):
+
+
+    stdin, stdout, stderr = target.exec_command("python3 /home/hrr4/t.py")
+    for line in stdout.read().split(b'\n'):
+      print(str(line))
+      await asyncio.sleep(0.5)
+    stdin.close()
+        
+
+
+async def main():
+    
+    jumpbox_public_addr = '10.10.100.3'
+    target_addr = '10.10.100.4'
+
+    jumpbox=paramiko.SSHClient()
+    jumpbox.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+    jumpbox.connect(jumpbox_public_addr, username='hrr3', password='123')
+    task1=asyncio.create_task(fetch(jumpbox))
+
+    jumpbox_transport = jumpbox.get_transport()
+    src_addr = (jumpbox_public_addr, 22)
+    dest_addr = (target_addr, 22)
+    jumpbox_channel = jumpbox_transport.open_channel("direct-tcpip", dest_addr, src_addr)
+    target=paramiko.SSHClient()
+    target.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+    target.connect(target_addr, username='hrr4', password='123', sock=jumpbox_channel)
+
+    task2=asyncio.create_task(print_num(target))
+    await task1
+    #print(value)
+    await task2
+    target.close()
+    jumpbox.close()
+
+asyncio.run(main())
