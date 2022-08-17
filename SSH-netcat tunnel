@@ -1,5 +1,12 @@
-import os
 
+"""
+This code is for ssh-netcat tunnel. 
+
+Attacker---SSH---intermediary host1---nc---intermediary host2---SSH---victim
+
+"""
+
+import os
 import nc
 
 for k,i,j in zip(nc.containerlist,nc.iplist,nc.user):
