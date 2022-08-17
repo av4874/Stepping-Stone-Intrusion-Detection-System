@@ -1,0 +1,17 @@
+#Installation of the Docker Environment along with openvswitch
+
+import os
+
+os.system('sudo apt-get update')
+os.system('sudo apt install -y apt-transport-https ca-certificates curl software-properties-common')
+os.system('curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -')
+os.system('sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu bionic stable"')
+os.system('sudo apt update')
+os.system('sudo apt-cache policy docker-ce')
+os.system('sudo apt install docker-ce')
+os.system('sudo apt-get install -y openvswitch-switch')
+os.system('sudo systemctl enable openvswitch-switch.service')
+os.system('sudo docker run -dit --name n1 ubuntu /bin/bash')
+os.system('sudo docker exec n1 apt-get update')
+os.system('sudo docker exec n1 apt-get install -y iputils-ping iproute2 dnsmasq isc-dhcp-client vim nano iputils-ping readline-common dialog libterm-readline-gnu-perl openssh-server sudo')
+os.system('sudo docker commit  n1 dnsmasq')
