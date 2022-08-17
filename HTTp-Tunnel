@@ -1,0 +1,23 @@
+
+"""
+This code is for ssh-http tunnel. 
+
+Attacker---SSH---intermediary host1---HTTP---intermediary host2---SSH---victim
+
+"""
+
+import os
+#Installation of htc and hts would be required between the containers that would configured for HTTP.
+
+os.system('docker exec h2 htc --forward-port 8888 10.10.100.3:80')
+os.system('docker exec h3  hts --forward-port 10.10.100.3:22 80')
+#runs script fromh4
+#os.system('docker exec -it h1 ssh -J hrr2@10.10.100.2:22,hrr3@localhost:8888 hrr4@10.10.100.4 -p 22 ')
+#runs script from h1
+os.system('''docker exec -it h1 bash -c "ssh -J hrr2@10.10.100.2:22,hrr3@localhost:8888 hrr4@10.10.100.4 -p 22 'python3 -s' < /home/opy.py"''')
+
+print('Runnning this script to kill the process of tshark')
+os.system('killall tshark')
+
+print('The file name of each container is based on its interface connected to the network')
+os.system('ovs-vsctl list interface | grep "name\|external_ids"')
