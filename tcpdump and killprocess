@@ -2,9 +2,14 @@
 #tcpdump.py
 import os
 
+#installatin of gnome-terminal is required
+
+os.system('sudo apt-get update')
+os.system('sudo apt-get install gnome-terminal,tcpdump')
+
+
 network=input('Specify the network name\n')
 os.system(f'ovs-vsctl list-ifaces {network} | tee {network}.txt ')
-
 with open(f'{network}.txt') as f:
     content_list = [line.rstrip() for line in f]
 
