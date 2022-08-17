@@ -1,0 +1,55 @@
+#SSH Tunnel
+#Able to create n number of intermediate hosts between the attacker and the victims machine.
+
+import os
+iplist=[]
+user=[]
+netw= input("enter network name\n")
+print(f'You entered {netw}')
+os.system(f'sudo ovs-vsctl add-br {netw}')
+os.system('sudo ovs-vsctl show')
+c1=input("container name 1")
+print("conatiner will be created")
+os.system(f'sudo docker run -dit --name {c1} --cap-add=NET_ADMIN dnsmasq /bin/bash')
+print("adding port")
+os.system(f'sudo ovs-docker add-port  {netw} eth1 {c1}')
+print("ip subnet  for container 1 is 10.10.10.100.1/24\n")
+os.system(f'sudo docker exec {c1} ip add add 10.10.100.1/24 dev eth1')
+#-----ip1=iplist.append('10.10.10.1')
+subnet="10.10.100."
+
+value = int(input("containers?\n"))
+print(f'You entered {value}')
+for i in range(value):
+    x= input("conatiner name")
+    print("container being created...",x)
+
+    os.system(f'sudo docker run -dit --name {x} --cap-add=NET_ADMIN dnsmasq /bin/bash')
+    os.system(f'sudo ovs-docker add-port {netw} eth1 {x}')
+    app=f'{subnet}{i+2}'
+    iplist.append(app)
+    print("iplist", iplist)
+    
+    print(f'sudo docker exec {x} ip add add {app}/24 dev eth1')
+    os.system(f'sudo docker exec {x} ip add add {app}/24 dev eth1')
+    os.system(f'docker exec {x} service ssh start')
+    os.system(f'docker exec {x} apt-get update')
+    os.system(f'docker exec {x} apt-get install -y ncat')
+    os.system(f'docker exec -it {x} ssh-keygen -t rsa')
+    userin=input('Enter user for your container')
+    os.system(f'docker exec {x} useradd -m {userin}')
+    os.system(f'docker exec -it {x} passwd {userin}')
+    user.append(userin)
+
+jam=['@'.join(i) for i in zip(user, iplist)]
+    #print(jam, "jam")
+x=",".join([jam[i] for i in range(len(jam)-1)])
+y= jam[-1]
+
+print(f'sudo docker exec -it {c1} ssh -J {x} {y}' )
+
+#gain access of the victims terminal machine through jump host
+os.system(f'sudo docker exec -it {c1} ssh -o StrictHostKeyChecking=no -J {x} {y}')
+
+#This part of the code would run the script that is present in the attackers machine
+#os.system(f'''docker exec -it {c1} bash -c "ssh -o StrictHostKeyChecking=no -J {x} {y} 'python3 -s' < /home/opy.py"''')
