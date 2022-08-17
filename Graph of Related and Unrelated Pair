@@ -1,0 +1,60 @@
+
+import pandas as pd
+import chardet
+import numpy as np
+from scipy.spatial.distance import pdist
+from scipy.spatial.distance import cdist
+# importing the required module
+import matplotlib.pyplot as plt
+
+"""
+
+#The values in the list are cosine distances that were calculated from many pcap pairs.
+
+x1=[0.0000247943,0.00017929,0.0000144824]
+x1.sort()
+
+x2=[0.00027128,0.01553247,0.0000365067]
+x2.sort()
+x3=[0.03972418,0.00011189,0.0002885]
+x3.sort()
+y=[1,2,3]
+y1=[1,2,3]
+u1=[0.23, 0.32, 0.41123545]
+
+
+
+plt.plot(x1, y, label = "SSH")
+plt.plot(x2,y, label = "SSH-HTTP")
+plt.plot(x3, y, label = "SSH-Netcat")
+plt.plot(u1, y1, label = "unrelated")
+plt.xlabel('Cosine distance')
+plt.ylabel('probability')
+
+# show a legend on the plot
+plt.legend()
+  
+# function to show the plot
+plt.show()
+"""
+
+#THis part of the code shows the graph for related and unrelated pcap pairs cdistance that was calculated.
+#We were able to analyze that PCAP pairs below distance of 0.05 were part of the samee connection chain.
+
+y1=[11.1,22.2,33.3,44.4,55.6,66.7,77.8,88.9,100.0]
+r1=[0.0000144824,2.47943E-05,0.0000247943,0.00011189,0.00017929,0.00027128,0.0002885,0.01553247,0.03972418]
+r1.sort()
+u1=[0.32,0.41123545,0.50521085,0.50535794,0.64,0.68945922,0.72414461,0.97211692,0.23]
+u1.sort()
+
+plt.plot(r1, y1, label = "related")
+plt.plot(u1, y1, label = "unrelated")
+
+
+plt.xlabel('Cosine distance')
+plt.ylabel('probability')
+# show a legend on the plot
+plt.legend()
+  
+# function to show the plot
+plt.show()
