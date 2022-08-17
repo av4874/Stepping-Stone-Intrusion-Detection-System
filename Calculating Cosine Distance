@@ -1,0 +1,73 @@
+"""
+
+This part of the code shows how to calculate the cosine distance so that we are 
+able to check if the pcap pairs of the stepping stone attack are part of the same chain or not.
+
+Many pcap pairs were analyzed  in order to create a related and unrelated graph diagram representation.
+
+"""
+import math
+import pandas as pd
+import chardet
+import numpy as np
+from scipy.spatial.distance import pdist
+from scipy.spatial.distance import cdist
+# importing the required module
+import matplotlib.pyplot as plt
+
+
+
+#could use of different connection chain, as the number of packets would vary
+columns=[0,1,2,3,4,5,6,7,8,9,10,11]
+array=[]
+oscar_demographics = pd.read_csv("h2src=2anddst=1.csv",encoding='ascii',usecols =columns )#, nrows=600
+df = oscar_demographics.apply(lambda x: pd.Series(x.dropna().values)).fillna(' ')
+
+array=[]
+n1=[]
+n2=[]
+h1=[]
+h2=[]
+
+
+for i in columns:
+    if i == 5:
+        n1=df.values.T[i].tolist()
+        n1 = [x for x in n1 if x != ' ']
+        for i in range(10):
+                h1.append(n1[i])
+        print(h1)
+        c=0
+        for i in h1:
+            c=c+1
+        print(c)   
+        array.append(h1)  
+
+    
+
+oscar_demographic = pd.read_csv("h3_httpsrc=2anddst=3.csv",encoding='ascii',usecols =columns )#, nrows=600
+dfi = oscar_demographic.apply(lambda x: pd.Series(x.dropna().values)).fillna(' ')
+for i in columns:
+    if i == 5:
+        n2=dfi.values.T[i].tolist()
+        n2 = [x for x in n2 if x != ' ']
+        for i in range(10):
+                h2.append(n2[i])
+        print(h2)
+        c=0
+        for i in h2:
+            c=c+1
+        print(c)   
+        array.append(h2)   
+
+
+#print(type(array))
+#arr1 = cdist(array,array, 'cosine') 
+#print("Value of cdist is :", arr1) 
+
+ 
+a = np.array([h1])
+b = np.array([h2])
+arr1 = cdist(a,b, 'cosine')  
+print("Value of cdist is :", arr1)
+
